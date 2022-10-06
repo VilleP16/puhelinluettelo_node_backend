@@ -1,9 +1,12 @@
 const { request, response } = require('express');
 const express = require('express')
 const morgan  = require('morgan')
+const cors = require('cors')
+
 
 const app = express()
 app.use(express.json())
+app.use(cors())
 
 
 morgan.token('content', function getContent(request){
@@ -29,25 +32,26 @@ const dateNow = new Date();
 let persons = [
   {
     id:1, 
-    name: "Arto Hellassssss",
-    number: "040567812" 
+    name: "David Beckham",
+    phone: "040567812" 
   },
   {
     id:2, 
-    name: "Ada Lovelace",
-    number: "040544444" 
+    name: "Roy Keane",
+    phone: "040544444" 
   },
   {
     id:3, 
-    name: "Dan Abramov",
-    number: "04012240000" 
+    name: "Wayne Rooney",
+    phone: "04012240000" 
   }, 
   {
     id:4, 
     name: "Paolo Maldini",
-    number: "04012244444"
+    phone: "04012244444"
   }
 ]
+
 
 const nameAlreadyExist = name  => {
   return  persons.find(person => person.name === name)
@@ -85,7 +89,7 @@ app.post('/api/persons', (request, response) => {
     const newPersonDetails = request.body
     
 
-    if(!newPersonDetails.name || !newPersonDetails.number){
+    if(!newPersonDetails.name || !newPersonDetails.phone){
       return response.status(404).json({
         error: 'Name or number is missing!'
       })
@@ -96,11 +100,14 @@ app.post('/api/persons', (request, response) => {
       })
     }
     const newPerson = {
+      id: Date.now(),
       name: newPersonDetails.name,
-      number: newPersonDetails.number,
-      id: Date.now()
+      phone: newPersonDetails.phone,
+     
     }
+    console.log('ennen',persons)
     persons = persons.concat(newPerson)
+    console.log('jälkeen',persons)
     response.json(newPerson)
 })
 const unknownEndpoint = (request, response) => {
