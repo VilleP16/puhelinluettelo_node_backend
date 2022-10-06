@@ -1,6 +1,7 @@
 const { request, response } = require('express');
 const express = require('express')
 const app = express()
+app.use(express.json())
 
 const infoText1 ="Phonebook has info for ";
 const infoText2 = " people!"; 
@@ -57,6 +58,36 @@ app.delete('/api/persons/:id', (request, response) =>{
     response.status(204).end()
     console.log("deleted iidee nro", id)
 })
+
+app.post('/api/persons', (request, response) => {
+    const newPersonDetails = request.body
+
+    if(!newPersonDetails.name || !newPersonDetails.number){
+      return response.status(404).json({
+        error: 'Name or number is missing!'
+      })
+    }
+    if(nameAlreadyExist(newPersonDetails.name)){
+      return response.status(404).json({
+        error: 'Name already exists'
+      })
+    }
+    const newPerson = {
+      name: newPersonDetails.name,
+      number: newPersonDetails.number,
+      id: Date.now()
+    }
+    persons = persons.concat(newPerson)
+    response.json(newPerson)
+})
+
+nameAlreadyExist = name  => {
+  const existingPerson = persons.find(person => person.name === name)
+  if(existingPerson){
+    return true
+  }
+  return false
+}
 
 const PORT = 3001
 app.listen(PORT, () => {
