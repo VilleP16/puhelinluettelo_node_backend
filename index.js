@@ -3,6 +3,16 @@ const express = require('express')
 const app = express()
 app.use(express.json())
 
+const requestLogger = (request, response, next) => {
+  console.log('Method:', request.method)
+  console.log('Path:  ', request.path)
+  console.log('Body:  ', request.body)
+  console.log('---')
+  next()
+}
+app.use(requestLogger)
+
+
 const infoText1 ="Phonebook has info for ";
 const infoText2 = " people!"; 
 const dateNow = new Date();
@@ -29,6 +39,15 @@ let persons = [
     number: "04012244444"
   }
 ]
+
+
+const nameAlreadyExist = name  => {
+  const existingPerson = persons.find(person => person.name === name)
+  if(existingPerson){
+    return true
+  }
+  return false
+}
 
 
 app.get('/api/persons', (request, response) => {
@@ -80,14 +99,11 @@ app.post('/api/persons', (request, response) => {
     persons = persons.concat(newPerson)
     response.json(newPerson)
 })
-
-nameAlreadyExist = name  => {
-  const existingPerson = persons.find(person => person.name === name)
-  if(existingPerson){
-    return true
-  }
-  return false
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
 }
+
+app.use(unknownEndpoint)
 
 const PORT = 3001
 app.listen(PORT, () => {
