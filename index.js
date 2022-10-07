@@ -7,6 +7,7 @@ const cors = require('cors')
 const app = express()
 app.use(express.json())
 app.use(cors())
+app.use(express.static('build'))
 
 
 morgan.token('content', function getContent(request){
@@ -32,22 +33,22 @@ const dateNow = new Date();
 let persons = [
   {
     id:1, 
-    name: "David Beckham",
+    name: "Aku Ankka",
     phone: "040567812" 
   },
   {
     id:2, 
-    name: "Roy Keane",
+    name: "Mikki Hiiri",
     phone: "040544444" 
   },
   {
     id:3, 
-    name: "Wayne Rooney",
+    name: "Hessu Hopo",
     phone: "04012240000" 
   }, 
   {
     id:4, 
-    name: "Paolo Maldini",
+    name: "Roope-Ankka",
     phone: "04012244444"
   }
 ]
